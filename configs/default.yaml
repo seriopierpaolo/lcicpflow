@@ -1,0 +1,88 @@
+device: cpu
+random_seed: 7
+
+input:
+  folder: ../data_from_rosbag
+  source: null
+  target: null
+  max_pairs: 1
+
+output:
+  root: outputs/inference
+  save_npz: true
+  save_runtime: true
+  save_config: true
+
+poses:
+  source_pose: null
+  target_pose: null
+  convention: "T_world_lidar; ego compensation maps source lidar points into target lidar coordinates"
+
+ground_filter:
+  z_min: 0.5
+  z_max: 10.0
+  ground_z_threshold: 0.5
+  adaptive_percentile: null
+  adaptive_margin: 0.15
+
+
+xy_cropbox:
+  x_min: -25.0
+  x_max: 25.0
+  y_min: -25.0
+  y_max: 25.0
+  xy_threshold: -25.0  
+  adaptive_percentile: null
+  adaptive_margin: 0.15
+
+
+clustering:
+  backend: hdbscan
+  min_cluster_size: 50
+  dbscan_eps: 0.8
+  hdbscan_min_samples: null
+  max_clusters: 200
+  fuse_scans: true
+
+pairing:
+  max_translation_x: 3.33
+  max_translation_y: 3.33
+  max_translation_z: 0.30
+  use_centroid_gate: true
+
+histogram_init:
+  bin_size: 0.10
+  bounds_x: [-3.33, 3.33]
+  bounds_y: [-3.33, 3.33]
+  bounds_z: [-0.30, 0.30]
+  max_votes_per_cluster_points: 250
+  chunk_size: 2000000
+
+icp:
+  backend: open3d
+  max_iterations: 150
+  tolerance: 0.000001
+  max_correspondence_distance: 0.50
+  inlier_threshold: 0.10
+  max_average_distance: 0.20
+  min_inlier_ratio: 0.20
+  min_points: 5
+
+association:
+  method: argmin
+  reject_unreliable: true
+
+scene_flow:
+  identity_for_unmatched: true
+
+visualization:
+  max_points: 50000
+  dpi: 600
+
+logging:
+  level: INFO
+
+evaluation:
+  strict_threshold: 0.05
+  relaxed_threshold: 0.10
+  eps: 0.000001

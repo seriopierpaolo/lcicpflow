@@ -1,0 +1,20 @@
+services:
+  lcicpflow:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: lcicpflow:dev
+    working_dir: /workspace/lcicpflow
+    volumes:
+      - ..:/workspace/lcicpflow
+      - ../..:/workspace/project
+    environment:
+      - MPLBACKEND=Agg
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: bash
