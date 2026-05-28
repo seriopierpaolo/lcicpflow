@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import numpy as np
 from scipy.spatial import cKDTree
-
+import open3d as o3d
 from lcicpflow.icp.base import ICPResult
 from lcicpflow.utils.geometry import transform_points
 
@@ -30,7 +30,7 @@ class ICPBackend:
         return result
 
     def _open3d_icp(self, src: np.ndarray, dst: np.ndarray, init: np.ndarray) -> ICPResult:
-        import open3d as o3d
+        
 
         p_src = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(src[:, :3]))
         p_dst = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(dst[:, :3]))
